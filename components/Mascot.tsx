@@ -31,9 +31,9 @@ export default function Mascot() {
         style={{ perspective: 1200 }}
       >
         {/* orbit rings */}
-        <div className="absolute top-1/2 left-1/2 w-[115%] max-w-[420px] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border border-grey-3 animate-spin-slow" />
+        <div className="absolute top-1/2 left-1/2 w-[115%] max-w-[420px] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border border-grey-4 animate-spin-slow" />
         <div
-          className="absolute top-1/2 left-1/2 w-[85%] max-w-[320px] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border border-grey-2 animate-spin-slow"
+          className="absolute top-1/2 left-1/2 w-[85%] max-w-[320px] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border border-grey-3 animate-spin-slow"
           style={{ animationDuration: '60s', animationDirection: 'reverse' }}
         />
 
