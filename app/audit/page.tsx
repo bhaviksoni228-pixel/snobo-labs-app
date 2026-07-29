@@ -44,33 +44,38 @@ export default function AuditPage() {
   }
 
   return (
-    <main>
+    <main className="relative">
       <BlobBackground />
       <Nav />
 
       <section className="relative z-5 px-[6vw] pt-32 pb-24 min-h-screen">
-        <div className="font-display text-[11px] tracking-[0.28em] uppercase text-grey-4 mb-4">
-          Free Tool
+        <div className="max-w-lg mb-8">
+          <div className="font-display text-[11px] tracking-[0.28em] uppercase text-grey-4 mb-4">
+            Free Tool
+          </div>
+          <h1 className="font-display font-bold text-[clamp(1.8rem,6vw,3.2rem)] leading-tight mb-4">
+            Find out what your website is costing you.
+          </h1>
+          <p className="text-grey-5">
+            Paste your website URL. Snobo checks it and tells you exactly where you&apos;re likely losing customers — free, in under a minute.
+          </p>
         </div>
-        <h1 className="font-display font-bold text-[clamp(1.8rem,6vw,3.2rem)] max-w-2xl leading-tight mb-4">
-          Find out what your website is costing you.
-        </h1>
-        <p className="text-grey-5 max-w-lg mb-10">
-          Paste your website URL. Snobo checks it and tells you exactly where you&apos;re likely losing customers — free, in under a minute.
-        </p>
 
         {step === 'input' && (
-          <form onSubmit={handleUrlSubmit} className="max-w-md flex flex-col sm:flex-row gap-3">
+          <form
+            onSubmit={handleUrlSubmit}
+            className="max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+          >
             <input
               required
               placeholder="yourwebsite.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="flex-1 bg-transparent border border-grey-2 rounded-lg px-4 py-3.5 text-white focus:border-white outline-none transition-colors"
+              className="flex-1 bg-grey-1/5 border border-grey-2/30 rounded-lg px-4 py-3.5 text-black placeholder:text-grey-4 focus:border-black outline-none transition-colors"
             />
             <button
               type="submit"
-              className="font-display font-semibold px-6 py-3.5 rounded-full bg-white text-black whitespace-nowrap"
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap"
             >
               Audit it →
             </button>
@@ -78,9 +83,12 @@ export default function AuditPage() {
         )}
 
         {step === 'email' && (
-          <form onSubmit={handleEmailSubmit} className="max-w-md space-y-4">
-            <div className="text-sm text-grey-4 mb-2">
-              Checking: <span className="text-white">{url}</span>
+          <form
+            onSubmit={handleEmailSubmit}
+            className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+          >
+            <div className="text-sm text-grey-4">
+              Checking: <span className="text-black font-semibold">{url}</span>
             </div>
             <input
               required
@@ -88,11 +96,11 @@ export default function AuditPage() {
               placeholder="Where should we send your report?"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border border-grey-2 rounded-lg px-4 py-3.5 text-white focus:border-white outline-none transition-colors"
+              className="w-full bg-grey-1/5 border border-grey-2/30 rounded-lg px-4 py-3.5 text-black placeholder:text-grey-4 focus:border-black outline-none transition-colors"
             />
             <button
               type="submit"
-              className="font-display font-semibold px-6 py-3.5 rounded-full bg-white text-black"
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white"
             >
               Get my free audit →
             </button>
@@ -100,17 +108,17 @@ export default function AuditPage() {
         )}
 
         {step === 'loading' && (
-          <div className="max-w-md py-10">
-            <div className="text-grey-5 animate-pulse">Analyzing your site...</div>
+          <div className="max-w-md py-10 px-6 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <div className="text-black animate-pulse font-medium">Analyzing your site...</div>
           </div>
         )}
 
         {step === 'error' && (
-          <div className="max-w-md space-y-4">
-            <p className="text-red-400 text-sm">{errorMsg}</p>
+          <div className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <p className="text-red-600 text-sm font-medium">{errorMsg}</p>
             <button
               onClick={() => setStep('input')}
-              className="font-display text-sm underline text-grey-4"
+              className="font-display text-sm underline text-black"
             >
               Try again
             </button>
@@ -119,7 +127,7 @@ export default function AuditPage() {
 
         {step === 'result' && (
           <div className="max-w-xl">
-            <div className="border border-grey-2 rounded-2xl p-6 sm:p-8 whitespace-pre-line text-grey-5 leading-relaxed">
+            <div className="rounded-2xl p-6 sm:p-8 whitespace-pre-line text-black leading-relaxed bg-white shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
               {report}
             </div>
             <div className="mt-8 flex flex-wrap gap-3">
