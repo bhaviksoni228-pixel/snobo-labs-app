@@ -60,7 +60,7 @@ function Blob() {
   return (
     <mesh ref={meshRef}>
       <icosahedronGeometry ref={geoRef} args={[2, 24]} />
-      <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.35} />
+      <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.18} />
     </mesh>
   )
 }
