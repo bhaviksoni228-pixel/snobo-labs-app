@@ -14,7 +14,7 @@ export default function FaqAccordion({ items }: { items: FaqItem[] }) {
         return (
           <div
             key={item.q}
-            className={`border rounded-xl overflow-hidden transition-colors ${
+            className={`border rounded-xl overflow-hidden transition-colors bg-black/60 backdrop-blur-sm ${
               isOpen ? 'border-white' : 'border-grey-2'
             }`}
           >
