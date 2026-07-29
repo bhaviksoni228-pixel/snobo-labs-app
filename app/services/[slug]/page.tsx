@@ -24,7 +24,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
   if (!service) return notFound()
 
   return (
-    <main>
+    <main className="relative">
       <BlobBackground />
       <Nav />
 
