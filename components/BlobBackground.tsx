@@ -18,7 +18,6 @@ function Blob() {
   }, [])
 
   const mouse = useRef({ x: 0, y: 0 })
-  const scrollY = useRef(0)
 
   useMemo(() => {
     if (typeof window === 'undefined') return
@@ -26,13 +25,6 @@ function Blob() {
       mouse.current.x = e.clientX / window.innerWidth - 0.5
       mouse.current.y = e.clientY / window.innerHeight - 0.5
     })
-    window.addEventListener(
-      'scroll',
-      () => {
-        scrollY.current = window.scrollY
-      },
-      { passive: true }
-    )
   }, [])
 
   useFrame((state) => {
@@ -52,8 +44,7 @@ function Blob() {
 
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.0016 + mouse.current.x * 0.0006
-      meshRef.current.rotation.x = mouse.current.y * 0.3 + scrollY.current * 0.0004
-      meshRef.current.position.y = -scrollY.current * 0.0012
+      meshRef.current.rotation.x = mouse.current.y * 0.3
     }
   })
 
@@ -87,7 +78,7 @@ export default function BlobBackground() {
   if (status === 'unsupported' || status === 'checking') return null
 
   return (
-    <div className="fixed inset-0 z-0" style={{ width: '100vw', height: '100vh' }}>
+    <div className="absolute top-0 left-0 w-full h-screen z-0 pointer-events-none">
       <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
         <Blob />
       </Canvas>
