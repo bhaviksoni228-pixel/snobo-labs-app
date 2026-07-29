@@ -85,8 +85,8 @@ export default function AdminDashboard() {
         <a href="/admin/conversations" className="text-sm text-grey-4 underline">
           View Snobo Conversations →
         </a>
+      </div>
       <p className="text-grey-4 text-sm mb-8">{inquiries.length} total inquiries</p>
-
       {error && <p className="text-red-400 mb-6">{error}</p>}
 
       <div className="space-y-4">
