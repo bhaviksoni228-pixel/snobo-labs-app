@@ -54,7 +54,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
         </div>
         <div className="grid sm:grid-cols-2 gap-4 max-w-3xl">
           {service.features.map((f) => (
-            <div key={f} className="flex items-start gap-3 border border-grey-2 rounded-xl px-5 py-4">
+            <div key={f} className="flex items-start gap-3 border border-grey-2 rounded-xl px-5 py-4 bg-black/60 backdrop-blur-sm">
               <span className="text-grey-5 mt-0.5">→</span>
               <span className="text-sm text-grey-5">{f}</span>
             </div>
@@ -86,7 +86,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {service.pricing.map((tier) => (
-            <div key={tier.name} className="border border-grey-2 rounded-2xl p-6 flex flex-col">
+            <div key={tier.name} className="border border-grey-2 rounded-2xl p-6 flex flex-col bg-black/60 backdrop-blur-sm">
               <div className="font-display font-semibold text-lg">{tier.name}</div>
               <div className="mt-3 flex items-baseline gap-1.5">
                 <span className="font-display font-bold text-3xl">{tier.price}</span>
