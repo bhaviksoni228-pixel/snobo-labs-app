@@ -3,6 +3,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import BlobBackground from '@/components/BlobBackground'
 import HireForm from '@/components/HireForm'
+import FaqAccordion from '@/components/FaqAccordion'
 import { SERVICES_DATA, SERVICES_LIST } from '@/lib/services-data'
 
 export function generateStaticParams() {
@@ -106,14 +107,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
         <div className="font-display text-[11px] tracking-[0.28em] uppercase text-grey-4 mb-6">
           FAQ
         </div>
-        <div className="max-w-2xl space-y-6">
-          {service.faq.map((item) => (
-            <div key={item.q}>
-              <div className="font-display font-semibold mb-1.5">{item.q}</div>
-              <p className="text-sm text-grey-4 leading-relaxed">{item.a}</p>
-            </div>
-          ))}
-        </div>
+        <FaqAccordion items={service.faq} />
       </section>
 
       {/* Hire form */}
