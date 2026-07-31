@@ -46,21 +46,21 @@ function signRefreshToken(user) {
 }
 
 function setAuthCookies(res, accessToken, refreshToken) {
-  const isProd = process.env.NODE_ENV === 'production'
-  // sameSite: 'none' is required because the frontend (vercel.app) and backend (onrender.com)
-  // are different domains — this is a cross-site request from the browser's perspective.
-  // 'none' requires secure: true, which is already true in production (HTTPS).
+  // Always secure + sameSite:'none' — this app is always served over HTTPS in every
+  // real deployment (Render + Vercel), and frontend/backend are on different domains,
+  // which makes this a cross-site request. 'none' is required for the cookie to survive
+  // that trip; 'none' itself requires secure:true, which we always have here.
   res.cookie('snobo_access', accessToken, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    secure: true,
+    sameSite: 'none',
     maxAge: 15 * 60 * 1000,
     path: '/',
   })
   res.cookie('snobo_refresh', refreshToken, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    secure: true,
+    sameSite: 'none',
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/api/auth/refresh',
   })
