@@ -12,9 +12,17 @@ const SERVICE_NAMES = {
   'not-sure': 'Not sure yet',
 }
 
+const BUDGET_LABELS = {
+  'under-10k': 'Under ₹10,000',
+  '10k-25k': '₹10,000 – ₹25,000',
+  '25k-50k': '₹25,000 – ₹50,000',
+  '50k-plus': '₹50,000+',
+  'not-sure': 'Not sure yet',
+}
+
 async function createInquiry(req, res) {
   try {
-    const { name, email, phone, service, package: pkg, description, timeline } = req.body
+    const { name, email, phone, business, service, package: pkg, budget, description, timeline } = req.body
 
     if (!name || !email || !phone || !service || !description) {
       return res.status(400).json({ message: 'Please fill in all required fields' })
@@ -24,16 +32,18 @@ async function createInquiry(req, res) {
       name,
       email,
       phone,
+      business: business || '',
       service,
       package: pkg || '',
+      budget: budget || '',
       description,
       timeline: timeline || '',
       userId: req.user?._id || null,
     })
 
-    // Notify Snobo Labs via email (fire-and-forget, don't block the response on it)
     if (resend) {
       const serviceName = SERVICE_NAMES[service] || service
+      const budgetLabel = BUDGET_LABELS[budget] || 'Not specified'
       resend.emails
         .send({
           from: 'Snobo Labs <onboarding@resend.dev>',
@@ -43,8 +53,10 @@ async function createInquiry(req, res) {
             <h2>New inquiry: ${serviceName}</h2>
             <p><b>Package:</b> ${pkg || 'Not specified'}</p>
             <p><b>Name:</b> ${name}</p>
+            <p><b>Business:</b> ${business || 'Not specified'}</p>
             <p><b>Email:</b> ${email}</p>
             <p><b>Phone:</b> ${phone}</p>
+            <p><b>Budget:</b> ${budgetLabel}</p>
             <p><b>Timeline:</b> ${timeline || 'Not specified'}</p>
             <p><b>Requirements:</b><br/>${description}</p>
             <hr/>
@@ -53,7 +65,6 @@ async function createInquiry(req, res) {
         })
         .catch((err) => console.error('Email notify failed:', err.message))
 
-      // Confirmation email to the client
       resend.emails
         .send({
           from: 'Snobo Labs <onboarding@resend.dev>',
@@ -75,7 +86,6 @@ async function createInquiry(req, res) {
   }
 }
 
-// Admin: list all inquiries, newest first
 async function getInquiries(req, res) {
   try {
     const inquiries = await Inquiry.find().sort({ createdAt: -1 })
@@ -85,7 +95,6 @@ async function getInquiries(req, res) {
   }
 }
 
-// Admin: update inquiry status
 async function updateInquiryStatus(req, res) {
   try {
     const { status } = req.body
@@ -101,7 +110,6 @@ async function updateInquiryStatus(req, res) {
   }
 }
 
-// Client: get their own inquiry/purchase history
 async function getMyInquiries(req, res) {
   try {
     const inquiries = await Inquiry.find({ userId: req.user._id }).sort({ createdAt: -1 })
