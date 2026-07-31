@@ -55,13 +55,10 @@ export default function HireForm({
     setErrorMsg('')
 
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('snobo_token') : null
       const res = await fetch(`${API_URL}/api/inquiries`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
+        credentials: 'include', // attaches the httpOnly cookie automatically, if a session exists
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
       const data = await res.json()
