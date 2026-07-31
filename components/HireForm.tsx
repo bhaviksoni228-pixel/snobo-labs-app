@@ -12,6 +12,14 @@ const SERVICES = [
   { value: 'not-sure', label: 'Not sure yet' },
 ]
 
+const BUDGETS = [
+  { value: 'under-10k', label: 'Under ₹10,000' },
+  { value: '10k-25k', label: '₹10,000 – ₹25,000' },
+  { value: '25k-50k', label: '₹25,000 – ₹50,000' },
+  { value: '50k-plus', label: '₹50,000+' },
+  { value: 'not-sure', label: 'Not sure yet' },
+]
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export default function HireForm({
@@ -27,8 +35,10 @@ export default function HireForm({
     name: '',
     email: '',
     phone: '',
+    business: '',
     service: lockedService || '',
     package: '',
+    budget: '',
     description: '',
     timeline: '',
   })
@@ -67,7 +77,7 @@ export default function HireForm({
     return (
       <div className="text-center py-16">
         <div className="text-2xl font-display font-bold mb-3">Request received.</div>
-        <p className="text-grey-4">
+        <p className="text-grey-5">
           We&apos;ll get back to you within a few hours to confirm details and next steps
           (payment is handled separately once confirmed).
         </p>
@@ -84,7 +94,7 @@ export default function HireForm({
       )}
 
       <div>
-        <label className="block text-sm text-grey-4 mb-1.5">Name *</label>
+        <label className="block text-sm text-grey-5 mb-1.5">Name *</label>
         <input
           required
           value={form.name}
@@ -94,7 +104,17 @@ export default function HireForm({
       </div>
 
       <div>
-        <label className="block text-sm text-grey-4 mb-1.5">Email *</label>
+        <label className="block text-sm text-grey-5 mb-1.5">Business name</label>
+        <input
+          value={form.business}
+          onChange={(e) => update('business', e.target.value)}
+          placeholder="Optional — helps us understand your context"
+          className="w-full bg-transparent border border-grey-2 rounded-lg px-4 py-3 text-white placeholder:text-grey-4 focus:border-white outline-none transition-colors"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm text-grey-5 mb-1.5">Email *</label>
         <input
           type="email"
           required
@@ -105,7 +125,7 @@ export default function HireForm({
       </div>
 
       <div>
-        <label className="block text-sm text-grey-4 mb-1.5">Phone / WhatsApp *</label>
+        <label className="block text-sm text-grey-5 mb-1.5">Phone / WhatsApp *</label>
         <input
           required
           value={form.phone}
@@ -116,7 +136,7 @@ export default function HireForm({
 
       {!lockedService && (
         <div>
-          <label className="block text-sm text-grey-4 mb-1.5">Service *</label>
+          <label className="block text-sm text-grey-5 mb-1.5">Service *</label>
           <select
             required
             value={form.service}
@@ -135,7 +155,7 @@ export default function HireForm({
 
       {pricingTiers && pricingTiers.length > 0 && (
         <div>
-          <label className="block text-sm text-grey-4 mb-2">Which package? *</label>
+          <label className="block text-sm text-grey-5 mb-2">Which package? *</label>
           <div className="space-y-2.5">
             {pricingTiers.map((tier) => (
               <label
@@ -173,7 +193,23 @@ export default function HireForm({
       )}
 
       <div>
-        <label className="block text-sm text-grey-4 mb-1.5">What do you need? *</label>
+        <label className="block text-sm text-grey-5 mb-1.5">Budget range</label>
+        <select
+          value={form.budget}
+          onChange={(e) => update('budget', e.target.value)}
+          className="w-full bg-black border border-grey-2 rounded-lg px-4 py-3 text-white focus:border-white outline-none transition-colors"
+        >
+          <option value="">Select (optional)</option>
+          {BUDGETS.map((b) => (
+            <option key={b.value} value={b.value}>
+              {b.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm text-grey-5 mb-1.5">What do you need? *</label>
         <textarea
           required
           rows={4}
@@ -185,7 +221,7 @@ export default function HireForm({
       </div>
 
       <div>
-        <label className="block text-sm text-grey-4 mb-1.5">Timeline</label>
+        <label className="block text-sm text-grey-5 mb-1.5">Timeline</label>
         <select
           value={form.timeline}
           onChange={(e) => update('timeline', e.target.value)}
