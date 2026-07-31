@@ -21,15 +21,14 @@ export default function AdminConversations() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const token = localStorage.getItem('snobo_token')
-    if (!token) {
-      router.push('/admin/login')
-      return
-    }
     fetch(`${API_URL}/api/chat`, {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: 'include',
     })
       .then((res) => {
+        if (res.status === 401) {
+          router.push('/admin/login')
+          throw new Error('Not authenticated')
+        }
         if (!res.ok) throw new Error('Failed to load conversations')
         return res.json()
       })
@@ -37,7 +36,9 @@ export default function AdminConversations() {
         setConversations(data.conversations)
         if (data.conversations.length > 0) setSelected(data.conversations[0])
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        if (err.message !== 'Not authenticated') setError(err.message)
+      })
       .finally(() => setLoading(false))
   }, [router])
 
