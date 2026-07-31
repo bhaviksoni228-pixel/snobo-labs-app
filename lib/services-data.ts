@@ -1,8 +1,10 @@
 export type PricingTier = {
   name: string
   price: string
-  priceNote?: string // e.g. "one-time" or "/month"
+  priceNote?: string
   description: string
+  checks: string[]
+  popular?: boolean
 }
 
 export type ServiceData = {
@@ -35,9 +37,28 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       'You review and launch',
     ],
     pricing: [
-      { name: 'Basic', price: '₹4,999', priceNote: 'one-time', description: 'Single landing page, mobile responsive, contact form' },
-      { name: 'Standard', price: '₹12,999', priceNote: 'one-time', description: 'Full business website (5–7 pages), SEO basics, editable content' },
-      { name: 'Premium', price: '₹24,999', priceNote: 'one-time', description: 'E-commerce or complex multi-feature site, custom admin panel' },
+      {
+        name: 'Basic',
+        price: '₹4,999',
+        priceNote: 'one-time',
+        description: 'Single landing page, mobile responsive, contact form',
+        checks: ['Single landing page', 'Mobile responsive', 'Contact form', 'Live in 5-7 days'],
+      },
+      {
+        name: 'Standard',
+        price: '₹12,999',
+        priceNote: 'one-time',
+        description: 'Full business website (5–7 pages), SEO basics, editable content',
+        checks: ['5-7 page website', 'Basic SEO setup', 'Admin-editable content', 'Priority support'],
+        popular: true,
+      },
+      {
+        name: 'Premium',
+        price: '₹24,999',
+        priceNote: 'one-time',
+        description: 'E-commerce or complex multi-feature site, custom admin panel',
+        checks: ['E-commerce or complex features', 'Custom admin panel', 'Unlimited pages', 'Priority support'],
+      },
     ],
     faq: [
       { q: 'How long does it take?', a: 'Basic sites are live in 5-7 days. Standard and Premium may take slightly longer depending on scope.' },
@@ -63,8 +84,21 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       'It replies to customers 24/7, you review conversations anytime',
     ],
     pricing: [
-      { name: 'Setup', price: '₹7,999', priceNote: 'one-time', description: 'Website widget or WhatsApp bot, trained on your business' },
-      { name: 'Retainer', price: '₹1,499', priceNote: '/month', description: 'Hosting, monitoring, monthly retraining and updates' },
+      {
+        name: 'Setup',
+        price: '₹7,999',
+        priceNote: 'one-time',
+        description: 'Website widget or WhatsApp bot, trained on your business',
+        checks: ['Website chat widget', 'Trained on your business', 'WhatsApp option available'],
+        popular: true,
+      },
+      {
+        name: 'Retainer',
+        price: '₹1,499',
+        priceNote: '/month',
+        description: 'Hosting, monitoring, monthly retraining and updates',
+        checks: ['Hosting included', 'Monthly retraining', 'Ongoing monitoring'],
+      },
     ],
     faq: [
       { q: 'Does it work on WhatsApp?', a: 'Yes — Snobo Chat can be deployed as a website widget, a WhatsApp agent, or both.' },
@@ -90,8 +124,21 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       'You start tracking every lead from day one',
     ],
     pricing: [
-      { name: 'Setup', price: '₹9,999', priceNote: 'one-time', description: 'Full CRM build, tailored to your sales process' },
-      { name: 'Retainer', price: '₹1,999', priceNote: '/month', description: 'Maintenance, new features, ongoing support' },
+      {
+        name: 'Setup',
+        price: '₹9,999',
+        priceNote: 'one-time',
+        description: 'Full CRM build, tailored to your sales process',
+        checks: ['Lead pipeline tracking', 'Follow-up reminders', 'Tailored to your process'],
+        popular: true,
+      },
+      {
+        name: 'Retainer',
+        price: '₹1,999',
+        priceNote: '/month',
+        description: 'Maintenance, new features, ongoing support',
+        checks: ['Ongoing maintenance', 'New features added', 'Priority support'],
+      },
     ],
     faq: [
       { q: 'Do I need to change how I use WhatsApp?', a: 'No — it works alongside your existing WhatsApp Business setup.' },
@@ -115,8 +162,21 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       'It runs automatically alongside Snobo Chat',
     ],
     pricing: [
-      { name: 'Booking Bot', price: '₹4,999', priceNote: 'one-time add-on', description: 'Handles appointment scheduling automatically' },
-      { name: 'Lead Qualification Bot', price: '₹3,999', priceNote: 'one-time add-on', description: 'Pre-screens inbound leads before they reach you' },
+      {
+        name: 'Booking Bot',
+        price: '₹4,999',
+        priceNote: 'one-time add-on',
+        description: 'Handles appointment scheduling automatically',
+        checks: ['Automatic scheduling', 'Calendar sync', 'Runs alongside Snobo Chat'],
+        popular: true,
+      },
+      {
+        name: 'Lead Qualification Bot',
+        price: '₹3,999',
+        priceNote: 'one-time add-on',
+        description: 'Pre-screens inbound leads before they reach you',
+        checks: ['Pre-screens leads', 'Saves you time', 'Runs alongside Snobo Chat'],
+      },
     ],
     faq: [
       { q: 'Do I need Snobo Chat first?', a: 'Yes, these bots are add-ons that build on top of a Snobo Chat setup.' },
@@ -141,8 +201,21 @@ export const SERVICES_DATA: Record<string, ServiceData> = {
       'You get a working product to show investors or launch with',
     ],
     pricing: [
-      { name: 'Starter MVP', price: '₹34,999', priceNote: 'starting', description: 'Website + one core feature (e.g. auth + one main function)' },
-      { name: 'Full MVP', price: '₹59,999+', priceNote: 'custom quoted', description: 'Full-stack product, AI/CRM pieces bundled as needed' },
+      {
+        name: 'Starter MVP',
+        price: '₹34,999',
+        priceNote: 'starting',
+        description: 'Website + one core feature (e.g. auth + one main function)',
+        checks: ['Website + one core feature', 'Direct access to builder', 'Fast turnaround'],
+      },
+      {
+        name: 'Full MVP',
+        price: '₹59,999+',
+        priceNote: 'custom quoted',
+        description: 'Full-stack product, AI/CRM pieces bundled as needed',
+        checks: ['Full-stack product', 'AI/CRM pieces bundled', 'Investor-ready build'],
+        popular: true,
+      },
     ],
     faq: [
       { q: 'What if my idea needs something not listed?', a: 'Tell us in the form — MVPs are scoped individually, this is a starting point.' },
