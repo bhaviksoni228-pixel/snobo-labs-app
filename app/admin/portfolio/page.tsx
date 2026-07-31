@@ -27,25 +27,22 @@ export default function AdminPortfolio() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
-  function getToken() {
-    return localStorage.getItem('snobo_token')
-  }
-
   function loadItems() {
-    const token = getToken()
-    if (!token) {
-      router.push('/admin/login')
-      return
-    }
     fetch(`${API_URL}/api/portfolio/all`, {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: 'include',
     })
       .then((res) => {
+        if (res.status === 401) {
+          router.push('/admin/login')
+          throw new Error('Not authenticated')
+        }
         if (!res.ok) throw new Error('Failed to load portfolio items')
         return res.json()
       })
       .then((data) => setItems(data.items))
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        if (err.message !== 'Not authenticated') setError(err.message)
+      })
       .finally(() => setLoading(false))
   }
 
@@ -75,7 +72,6 @@ export default function AdminPortfolio() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
-    const token = getToken()
     const url = editingId
       ? `${API_URL}/api/portfolio/${editingId}`
       : `${API_URL}/api/portfolio`
@@ -84,12 +80,14 @@ export default function AdminPortfolio() {
     try {
       const res = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
+      if (res.status === 401) {
+        router.push('/admin/login')
+        return
+      }
       if (!res.ok) throw new Error('Failed to save')
       cancelEdit()
       loadItems()
@@ -102,11 +100,14 @@ export default function AdminPortfolio() {
 
   async function handleDelete(id: string) {
     if (!confirm('Delete this portfolio item?')) return
-    const token = getToken()
-    await fetch(`${API_URL}/api/portfolio/${id}`, {
+    const res = await fetch(`${API_URL}/api/portfolio/${id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: 'include',
     })
+    if (res.status === 401) {
+      router.push('/admin/login')
+      return
+    }
     loadItems()
   }
 
@@ -133,7 +134,6 @@ export default function AdminPortfolio() {
 
       {error && <p className="text-red-400 mb-6">{error}</p>}
 
-      {/* Add / edit form */}
       <form onSubmit={handleSubmit} className="border border-grey-2 rounded-xl p-5 mb-10 space-y-4 max-w-lg">
         <div className="font-display font-semibold text-sm">
           {editingId ? 'Edit item' : 'Add new item'}
@@ -205,7 +205,6 @@ export default function AdminPortfolio() {
         </div>
       </form>
 
-      {/* List */}
       <div className="space-y-3">
         {items.map((item) => (
           <div key={item._id} className="border border-grey-2 rounded-xl p-5 flex justify-between items-start gap-4">
