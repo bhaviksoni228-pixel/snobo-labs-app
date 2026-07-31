@@ -17,6 +17,29 @@ function Blob() {
     return geo.attributes.position.array.slice()
   }, [])
 
+  // Vertical gradient: bright near the top, fading to a dim (but still visible) glow at the bottom
+  const vertexColors = useMemo(() => {
+    const count = basePositions.length / 3
+    const colors = new Float32Array(count * 3)
+    let minY = Infinity
+    let maxY = -Infinity
+    for (let i = 0; i < count; i++) {
+      const y = basePositions[i * 3 + 1]
+      if (y < minY) minY = y
+      if (y > maxY) maxY = y
+    }
+    const range = maxY - minY || 1
+    for (let i = 0; i < count; i++) {
+      const y = basePositions[i * 3 + 1]
+      const t = (y - minY) / range // 0 = bottom, 1 = top
+      const brightness = 0.12 + t * 0.88 // bottom stays slightly visible, top is bright
+      colors[i * 3] = brightness
+      colors[i * 3 + 1] = brightness
+      colors[i * 3 + 2] = brightness
+    }
+    return colors
+  }, [basePositions])
+
   const mouse = useRef({ x: 0, y: 0 })
 
   useMemo(() => {
@@ -50,8 +73,21 @@ function Blob() {
 
   return (
     <mesh ref={meshRef}>
-      <icosahedronGeometry ref={geoRef} args={[2, 24]} />
-      <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.18} />
+      <icosahedronGeometry ref={geoRef} args={[2, 24]}>
+        <bufferAttribute
+          attach="attributes-color"
+          count={vertexColors.length / 3}
+          array={vertexColors}
+          itemSize={3}
+        />
+      </icosahedronGeometry>
+      <meshBasicMaterial
+        color="#ffffff"
+        vertexColors
+        wireframe
+        transparent
+        opacity={0.14}
+      />
     </mesh>
   )
 }
