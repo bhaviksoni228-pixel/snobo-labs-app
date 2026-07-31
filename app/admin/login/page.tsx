@@ -20,6 +20,7 @@ export default function AdminLogin() {
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // required so the httpOnly cookie set by the server is stored
         body: JSON.stringify({ email, password }),
       })
       const data = await res.json()
@@ -29,7 +30,7 @@ export default function AdminLogin() {
         throw new Error('This account does not have admin access')
       }
 
-      localStorage.setItem('snobo_token', data.token)
+      // No token handling needed — the server set an httpOnly cookie automatically
       router.push('/admin/dashboard')
     } catch (err: any) {
       setError(err.message)
@@ -44,10 +45,11 @@ export default function AdminLogin() {
         <h1 className="font-display font-bold text-2xl mb-6">Snobo Labs Admin</h1>
 
         <div>
-          <label className="block text-sm text-grey-4 mb-1.5">Email</label>
+          <label className="block text-sm text-grey-5 mb-1.5">Email</label>
           <input
             type="email"
             required
+            autoComplete="username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-transparent border border-grey-2 rounded-lg px-4 py-3 text-white focus:border-white outline-none"
@@ -55,10 +57,11 @@ export default function AdminLogin() {
         </div>
 
         <div>
-          <label className="block text-sm text-grey-4 mb-1.5">Password</label>
+          <label className="block text-sm text-grey-5 mb-1.5">Password</label>
           <input
             type="password"
             required
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full bg-transparent border border-grey-2 rounded-lg px-4 py-3 text-white focus:border-white outline-none"
