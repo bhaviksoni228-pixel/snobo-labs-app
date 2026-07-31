@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -29,35 +30,44 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    const token = localStorage.getItem('snobo_token')
-    if (!token) {
-      router.push('/admin/login')
-      return
-    }
+  async function handleLogout() {
+    await fetch(`${API_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    router.push('/admin/login')
+  }
 
+  useEffect(() => {
     fetch(`${API_URL}/api/inquiries`, {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: 'include', // sends the httpOnly cookie automatically
     })
       .then((res) => {
+        if (res.status === 401) {
+          router.push('/admin/login')
+          throw new Error('Not authenticated')
+        }
         if (!res.ok) throw new Error('Failed to load leads')
         return res.json()
       })
       .then((data) => setInquiries(data.inquiries))
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        if (err.message !== 'Not authenticated') setError(err.message)
+      })
       .finally(() => setLoading(false))
   }, [router])
 
   async function updateStatus(id: string, status: string) {
-    const token = localStorage.getItem('snobo_token')
     const res = await fetch(`${API_URL}/api/inquiries/${id}/status`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status }),
     })
+    if (res.status === 401) {
+      router.push('/admin/login')
+      return
+    }
     if (res.ok) {
       setInquiries((prev) =>
         prev.map((inq) => (inq._id === id ? { ...inq, status } : inq))
@@ -77,9 +87,14 @@ export default function AdminDashboard() {
     <main className="min-h-screen bg-black text-white px-6 py-10">
       <div className="flex justify-between items-center mb-2">
         <h1 className="font-display font-bold text-2xl">Leads</h1>
-        <a href="/admin/portfolio" className="text-sm text-grey-4 underline">
-          Manage Portfolio →
-        </a>
+        <div className="flex items-center gap-4">
+          <a href="/admin/portfolio" className="text-sm text-grey-4 underline">
+            Manage Portfolio →
+          </a>
+          <button onClick={handleLogout} className="text-sm text-grey-4 underline">
+            Log out
+          </button>
+        </div>
       </div>
       <div className="mb-6">
         <a href="/admin/conversations" className="text-sm text-grey-4 underline">
@@ -87,6 +102,7 @@ export default function AdminDashboard() {
         </a>
       </div>
       <p className="text-grey-4 text-sm mb-8">{inquiries.length} total inquiries</p>
+
       {error && <p className="text-red-400 mb-6">{error}</p>}
 
       <div className="space-y-4">
