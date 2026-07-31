@@ -114,7 +114,10 @@ export default function BlobBackground() {
   if (status === 'unsupported' || status === 'checking') return null
 
   return (
-    <div className="absolute top-0 left-0 w-full h-screen z-0 pointer-events-none">
+    <div
+      className="absolute top-0 left-0 z-0 pointer-events-none"
+      style={{ width: '100vw', height: '100vh', maxWidth: '100%' }}
+    >
       <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
         <Blob />
       </Canvas>
