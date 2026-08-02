@@ -5,14 +5,10 @@ import BlobBackground from '@/components/BlobBackground'
 import HireForm from '@/components/HireForm'
 import FaqAccordion from '@/components/FaqAccordion'
 import Reveal from '@/components/Reveal'
-import { SERVICES_DATA, SERVICES_LIST } from '@/lib/services-data'
+import { getServiceBySlug } from '@/lib/api'
 
-export function generateStaticParams() {
-  return SERVICES_LIST.map((s) => ({ slug: s.slug }))
-}
-
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const service = SERVICES_DATA[params.slug]
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const service = await getServiceBySlug(params.slug)
   if (!service) return {}
   return {
     title: `${service.name} — Snobo Labs`,
@@ -20,8 +16,8 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   }
 }
 
-export default function ServicePage({ params }: { params: { slug: string } }) {
-  const service = SERVICES_DATA[params.slug]
+export default async function ServicePage({ params }: { params: { slug: string } }) {
+  const service = await getServiceBySlug(params.slug)
   if (!service) return notFound()
 
   return (
@@ -55,7 +51,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
             What&apos;s included
           </div>
           <div className="grid sm:grid-cols-2 gap-4 max-w-3xl">
-            {service.features.map((f) => (
+            {service.features.map((f: string) => (
               <div
                 key={f}
                 className="flex items-start gap-3 border border-grey-2 rounded-xl px-5 py-4 bg-black/60 backdrop-blur-sm hover:border-grey-4 transition-colors"
@@ -75,7 +71,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
             How it works
           </div>
           <div className="grid sm:grid-cols-3 gap-6 max-w-4xl">
-            {service.howItWorks.map((step, i) => (
+            {service.howItWorks.map((step: string, i: number) => (
               <div key={step}>
                 <div className="font-display text-3xl font-bold text-grey-4 mb-2">
                   {String(i + 1).padStart(2, '0')}
@@ -94,7 +90,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
             Pricing
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {service.pricing.map((tier) => (
+            {service.pricing.map((tier: any) => (
               <div
                 key={tier.name}
                 className={`relative rounded-2xl p-6 flex flex-col bg-black/70 backdrop-blur-sm transition-transform hover:-translate-y-1 ${
@@ -114,7 +110,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                   )}
                 </div>
                 <ul className="mt-5 space-y-2.5 flex-1">
-                  {tier.checks.map((c) => (
+                  {tier.checks.map((c: string) => (
                     <li key={c} className="flex items-start gap-2.5 text-sm text-grey-5">
                       <span className="text-white flex-shrink-0 mt-0.5">✓</span>
                       {c}
