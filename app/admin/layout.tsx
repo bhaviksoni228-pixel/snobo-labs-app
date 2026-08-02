@@ -7,6 +7,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 const NAV_ITEMS = [
   { href: '/admin/dashboard', label: 'Leads', icon: '◧' },
   { href: '/admin/services', label: 'Services', icon: '◆' },
+  { href: '/admin/blog', label: 'Blog', icon: '✏' },
   { href: '/admin/content', label: 'Site Content', icon: '✎' },
   { href: '/admin/portfolio', label: 'Portfolio', icon: '◫' },
   { href: '/admin/conversations', label: 'Conversations', icon: '◔' },
