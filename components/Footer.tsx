@@ -16,7 +16,12 @@ export default async function Footer() {
     >
       <Image src="/symbol.png" alt="Snobo Labs" width={28} height={28} className="opacity-85" />
       <div>{content.copyright || DEFAULTS.copyright}</div>
-      <div>{content.email || DEFAULTS.email}</div>
+      <div className="flex items-center gap-4">
+        <a href="/privacy-policy" className="hover:text-white transition-colors">
+          Privacy Policy
+        </a>
+        <span>{content.email || DEFAULTS.email}</span>
+      </div>
     </footer>
   )
 }
