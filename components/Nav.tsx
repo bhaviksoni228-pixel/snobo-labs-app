@@ -13,6 +13,8 @@ const LINKS = [
   { href: '/services/bots', label: 'Snobo Bots', icon: '◉' },
   { href: '/services/build', label: 'Snobo Build', icon: '◆' },
   { href: '/audit', label: 'Free Website Audit', icon: '◎' },
+  { href: '/blog', label: 'Blog', icon: '✏' },
+  { href: '/about', label: 'About', icon: '☉' },
 ]
 
 export default function Nav() {
