@@ -120,17 +120,9 @@ export default function AdminPortfolio() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-10">
+    <main className="px-6 py-10">
       <h1 className="font-display font-bold text-2xl mb-2">Portfolio</h1>
-      <div className="flex gap-4 mb-2">
-        <a href="/admin/dashboard" className="text-sm text-grey-4 underline">
-          ← Back to Leads
-        </a>
-        <a href="/admin/conversations" className="text-sm text-grey-4 underline">
-          View Conversations →
-        </a>
-      </div>
-      <p className="text-grey-4 text-sm mb-8 mt-2">Manage demo pieces and case studies shown on the site.</p>
+      <p className="text-grey-4 text-sm mb-8">Manage demo pieces and case studies shown on the site.</p>
 
       {error && <p className="text-red-400 mb-6">{error}</p>}
 
