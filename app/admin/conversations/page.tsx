@@ -51,14 +51,8 @@ export default function AdminConversations() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-10">
-      <div className="flex justify-between items-center mb-2 flex-wrap gap-3">
-        <h1 className="font-display font-bold text-2xl">Conversations</h1>
-        <div className="flex gap-4 text-sm text-grey-4">
-          <a href="/admin/dashboard" className="underline">Leads</a>
-          <a href="/admin/portfolio" className="underline">Portfolio</a>
-        </div>
-      </div>
+    <main className="px-6 py-10">
+      <h1 className="font-display font-bold text-2xl mb-2">Conversations</h1>
       <p className="text-grey-4 text-sm mb-8">{conversations.length} Snobo chat sessions logged</p>
 
       {error && <p className="text-red-400 mb-6">{error}</p>}
