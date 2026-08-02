@@ -1,6 +1,15 @@
 import Mascot from './Mascot'
+import { getSiteContent } from '@/lib/api'
 
-export default function Hero() {
+const DEFAULTS = {
+  headline: 'Intelligence Beyond Limits',
+  subtext: 'Innovate. Automate. Elevate.',
+}
+
+export default async function Hero() {
+  const content = (await getSiteContent('hero')) || DEFAULTS
+  const [line1, line2, line3] = (content.headline || DEFAULTS.headline).split(' ')
+
   return (
     <section className="relative z-5 min-h-[100svh] flex flex-col justify-center px-[6vw] pt-[calc(64px+40px)] pb-[60px]">
       <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-5 items-center">
@@ -16,18 +25,14 @@ export default function Hero() {
             className="animate-fade-up font-display font-bold leading-[1] tracking-[-0.02em] text-[clamp(2.4rem,9vw,5.2rem)]"
             style={{ animationDelay: '0.25s' }}
           >
-            Intelligence
-            <br />
-            <span className="font-normal text-grey-5">beyond</span>
-            <br />
-            limits.
+            {content.headline || DEFAULTS.headline}
           </h1>
 
           <p
             className="animate-fade-up mt-5 max-w-[440px] text-[clamp(16px,4vw,19px)] leading-relaxed text-grey-5 font-medium"
             style={{ animationDelay: '0.4s' }}
           >
-            Websites, AI agents, and WhatsApp CRMs — built fast, built by the person who actually codes it.
+            {content.subtext || DEFAULTS.subtext}
           </p>
 
           <p
