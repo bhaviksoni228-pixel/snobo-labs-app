@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -29,14 +28,6 @@ export default function AdminDashboard() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-
-  async function handleLogout() {
-    await fetch(`${API_URL}/api/auth/logout`, {
-      method: 'POST',
-      credentials: 'include',
-    })
-    router.push('/admin/login')
-  }
 
   useEffect(() => {
     fetch(`${API_URL}/api/inquiries`, {
@@ -84,23 +75,8 @@ export default function AdminDashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-10">
-      <div className="flex justify-between items-center mb-2">
-        <h1 className="font-display font-bold text-2xl">Leads</h1>
-        <div className="flex items-center gap-4">
-          <a href="/admin/portfolio" className="text-sm text-grey-4 underline">
-            Manage Portfolio →
-          </a>
-          <button onClick={handleLogout} className="text-sm text-grey-4 underline">
-            Log out
-          </button>
-        </div>
-      </div>
-      <div className="mb-6">
-        <a href="/admin/conversations" className="text-sm text-grey-4 underline">
-          View Snobo Conversations →
-        </a>
-      </div>
+    <main className="px-6 py-10">
+      <h1 className="font-display font-bold text-2xl mb-2">Leads</h1>
       <p className="text-grey-4 text-sm mb-8">{inquiries.length} total inquiries</p>
 
       {error && <p className="text-red-400 mb-6">{error}</p>}
