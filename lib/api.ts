@@ -32,3 +32,25 @@ export async function getServiceBySlug(slug: string) {
     return null
   }
 }
+
+export async function getPublicBlogs() {
+  try {
+    const res = await fetch(`${API_URL}/api/blog`, { next: { revalidate: 30 } })
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.blogs || []
+  } catch {
+    return []
+  }
+}
+
+export async function getBlogBySlug(slug: string) {
+  try {
+    const res = await fetch(`${API_URL}/api/blog/slug/${slug}`, { next: { revalidate: 30 } })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.blog
+  } catch {
+    return null
+  }
+}
