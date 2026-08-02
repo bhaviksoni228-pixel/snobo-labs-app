@@ -12,6 +12,7 @@ const auditRoutes = require('./routes/audit')
 const chatRoutes = require('./routes/chat')
 const contentRoutes = require('./routes/content')
 const servicesRoutes = require('./routes/services')
+const blogRoutes = require('./routes/blog')
 
 const app = express()
 
@@ -54,6 +55,7 @@ app.use('/api/audit', auditRoutes)
 app.use('/api/chat', chatRoutes)
 app.use('/api/content', contentRoutes)
 app.use('/api/services', servicesRoutes)
+app.use('/api/blog', blogRoutes)
 
 // generic error handler — never leak internals to the client
 app.use((err, req, res, next) => {
