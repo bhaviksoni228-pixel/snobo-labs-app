@@ -45,7 +45,6 @@ export default function AuditPage() {
   return (
     <main className="relative bg-black min-h-screen">
       <Nav />
-
       <section className="px-[6vw] pt-32 pb-24 min-h-screen">
         <div className="max-w-lg mb-8">
           <div className="font-display text-[11px] tracking-[0.28em] uppercase text-grey-4 mb-4">
@@ -55,7 +54,7 @@ export default function AuditPage() {
             Find out what your website is costing you.
           </h1>
           <p className="text-grey-5">
-            Paste your website URL. Snobo checks it and tells you exactly where you&apos;re likely losing customers — free, in under a minute.
+            Paste your website URL. Snobo checks it and tells you exactly where you are likely losing customers, free, in under a minute.
           </p>
         </div>
 
@@ -80,11 +79,78 @@ export default function AuditPage() {
               type="submit"
               className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap"
             >
-              Audit it →
+              Audit it
             </button>
           </form>
         )}
 
         {step === 'email' && (
           <form
-            onSubmit=
+            onSubmit={handleEmailSubmit}
+            className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+          >
+            <div className="text-sm text-gray-500">
+              Checking: <span className="text-black font-semibold">{url}</span>
+            </div>
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="Where should we send your report?"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
+            />
+            <button
+              type="submit"
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white"
+            >
+              Get my free audit
+            </button>
+          </form>
+        )}
+
+        {step === 'loading' && (
+          <div className="max-w-md py-10 px-6 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <div className="text-black animate-pulse font-medium">Analyzing your site...</div>
+          </div>
+        )}
+
+        {step === 'error' && (
+          <div className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <p className="text-red-600 text-sm font-medium">{errorMsg}</p>
+            <button
+              onClick={() => setStep('input')}
+              className="font-display text-sm underline text-black"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
+        {step === 'result' && (
+          <div className="max-w-xl">
+            <div className="rounded-2xl p-6 sm:p-8 whitespace-pre-line text-black leading-relaxed bg-white shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+              {report}
+            </div>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="/services/chat"
+                className="font-display font-semibold text-sm px-6 py-3.5 rounded-full bg-white text-black"
+              >
+                Fix this with Snobo Chat
+              </a>
+              <a
+                href="/services/sites"
+                className="font-display font-semibold text-sm px-6 py-3.5 rounded-full border border-white text-white"
+              >
+                Rebuild my site
+              </a>
+            </div>
+          </div>
+        )}
+      </section>
+      <Footer />
+    </main>
+  )
+}
