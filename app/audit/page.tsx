@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import BlobBackground from '@/components/BlobBackground'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
@@ -44,16 +43,15 @@ export default function AuditPage() {
   }
 
   return (
-    <main className="relative">
-      <BlobBackground />
+    <main className="relative bg-black min-h-screen">
       <Nav />
 
-      <section className="relative z-10 px-[6vw] pt-32 pb-24 min-h-screen">
+      <section className="px-[6vw] pt-32 pb-24 min-h-screen">
         <div className="max-w-lg mb-8">
           <div className="font-display text-[11px] tracking-[0.28em] uppercase text-grey-4 mb-4">
             Free Tool
           </div>
-          <h1 className="font-display font-bold text-[clamp(1.8rem,6vw,3.2rem)] leading-tight mb-4">
+          <h1 className="font-display font-bold text-[clamp(1.8rem,6vw,3.2rem)] leading-tight mb-4 text-white">
             Find out what your website is costing you.
           </h1>
           <p className="text-grey-5">
@@ -64,7 +62,7 @@ export default function AuditPage() {
         {step === 'input' && (
           <form
             onSubmit={handleUrlSubmit}
-            className="relative z-20 max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+            className="max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
           >
             <input
               type="text"
@@ -76,11 +74,11 @@ export default function AuditPage() {
               placeholder="yourwebsite.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="relative z-30 flex-1 bg-white border border-grey-2/30 rounded-lg px-4 py-3.5 text-black placeholder:text-grey-4 focus:border-black outline-none transition-colors"
+              className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
             />
             <button
               type="submit"
-              className="relative z-30 font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap"
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap"
             >
               Audit it →
             </button>
@@ -89,72 +87,4 @@ export default function AuditPage() {
 
         {step === 'email' && (
           <form
-            onSubmit={handleEmailSubmit}
-            className="relative z-20 max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
-          >
-            <div className="text-sm text-grey-4">
-              Checking: <span className="text-black font-semibold">{url}</span>
-            </div>
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              placeholder="Where should we send your report?"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="relative z-30 w-full bg-white border border-grey-2/30 rounded-lg px-4 py-3.5 text-black placeholder:text-grey-4 focus:border-black outline-none transition-colors"
-            />
-            <button
-              type="submit"
-              className="relative z-30 font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white"
-            >
-              Get my free audit →
-            </button>
-          </form>
-        )}
-
-        {step === 'loading' && (
-          <div className="relative z-20 max-w-md py-10 px-6 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-            <div className="text-black animate-pulse font-medium">Analyzing your site...</div>
-          </div>
-        )}
-
-        {step === 'error' && (
-          <div className="relative z-20 max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-            <p className="text-red-600 text-sm font-medium">{errorMsg}</p>
-            <button
-              onClick={() => setStep('input')}
-              className="font-display text-sm underline text-black"
-            >
-              Try again
-            </button>
-          </div>
-        )}
-
-        {step === 'result' && (
-          <div className="relative z-20 max-w-xl">
-            <div className="rounded-2xl p-6 sm:p-8 whitespace-pre-line text-black leading-relaxed bg-white shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-              {report}
-            </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="/services/chat"
-                className="font-display font-semibold text-sm px-6 py-3.5 rounded-full bg-white text-black"
-              >
-                Fix this with Snobo Chat →
-              </a>
-              <a
-                href="/services/sites"
-                className="font-display font-semibold text-sm px-6 py-3.5 rounded-full border border-white text-white"
-              >
-                Rebuild my site
-              </a>
-            </div>
-          </div>
-        )}
-      </section>
-
-      <Footer />
-    </main>
-  )
-}
+            onSubmit=
