@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
@@ -17,6 +17,18 @@ export default function AuditPage() {
 
   const urlInputRef = useRef<HTMLInputElement>(null)
   const emailInputRef = useRef<HTMLInputElement>(null)
+
+  // Force a repaint whenever the step changes — works around a rendering glitch
+  // on some Android browsers where React updates the DOM but doesn't visually repaint.
+  useEffect(() => {
+    document.body.style.transform = 'translateZ(0)'
+    const frame = requestAnimationFrame(() => {
+      document.body.style.transform = ''
+    })
+    window.scrollTo(window.scrollX, window.scrollY + 1)
+    window.scrollTo(window.scrollX, window.scrollY - 1)
+    return () => cancelAnimationFrame(frame)
+  }, [step])
 
   function handleUrlSubmit(e: React.FormEvent) {
     e.preventDefault()
