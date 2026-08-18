@@ -14,6 +14,8 @@ NAVIGATION — where things are on the site:
 - /services/sites, /services/chat, /services/crm, /services/bots, /services/build — individual service pages with full pricing, features, FAQ, and a hire form
 - /hire — general hire form (if they don't know which service yet)
 - /audit — free AI tool that checks their website and tells them what's costing them leads (no login needed, just URL + email)
+- /blog — articles and updates
+- /about — about Snobo Labs and founder Bhavik Soni
 
 KEY FACTS:
 - Snobo Labs is built by one person (a solo self-taught developer), not a big agency — this is the USP: direct access, no account managers, fast turnaround.
@@ -38,7 +40,7 @@ async function sendMessage(req, res) {
           Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: 'openai/gpt-oss-120b',
           messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
           temperature: 0.6,
           max_tokens: 220,
@@ -53,7 +55,6 @@ async function sendMessage(req, res) {
         "I'm not fully set up yet (missing API key), but you can check out our services on the homepage or use the /hire form directly!"
     }
 
-    // Log conversation (fire and forget style, but awaited since it's quick)
     if (sessionId) {
       const userMsg = messages[messages.length - 1]
       await Conversation.findOneAndUpdate(
@@ -78,7 +79,6 @@ async function sendMessage(req, res) {
   }
 }
 
-// Admin: view logged conversations
 async function getConversations(req, res) {
   try {
     const conversations = await Conversation.find().sort({ updatedAt: -1 }).limit(100)
