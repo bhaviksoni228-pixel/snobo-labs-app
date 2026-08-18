@@ -45,6 +45,7 @@ export default function AuditPage() {
   return (
     <main className="relative bg-black min-h-screen">
       <Nav />
+
       <section className="px-[6vw] pt-32 pb-24 min-h-screen">
         <div className="max-w-lg mb-8">
           <div className="font-display text-[11px] tracking-[0.28em] uppercase text-grey-4 mb-4">
@@ -54,7 +55,7 @@ export default function AuditPage() {
             Find out what your website is costing you.
           </h1>
           <p className="text-grey-5">
-            Paste your website URL. Snobo checks it and tells you exactly where you are likely losing customers, free, in under a minute.
+            Paste your website URL. Snobo checks it and tells you exactly where you&apos;re likely losing customers — free, in under a minute.
           </p>
         </div>
 
@@ -64,12 +65,6 @@ export default function AuditPage() {
             className="max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
           >
             <input
-              type="text"
-              required
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck="false"
               placeholder="yourwebsite.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -79,7 +74,7 @@ export default function AuditPage() {
               type="submit"
               className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap"
             >
-              Audit it
+              Audit it →
             </button>
           </form>
         )}
@@ -105,7 +100,7 @@ export default function AuditPage() {
               type="submit"
               className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white"
             >
-              Get my free audit
+              Get my free audit →
             </button>
           </form>
         )}
@@ -138,7 +133,7 @@ export default function AuditPage() {
                 href="/services/chat"
                 className="font-display font-semibold text-sm px-6 py-3.5 rounded-full bg-white text-black"
               >
-                Fix this with Snobo Chat
+                Fix this with Snobo Chat →
               </a>
               <a
                 href="/services/sites"
@@ -150,6 +145,7 @@ export default function AuditPage() {
           </div>
         )}
       </section>
+
       <Footer />
     </main>
   )
