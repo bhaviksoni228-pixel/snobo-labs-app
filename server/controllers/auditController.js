@@ -6,7 +6,6 @@ function normalizeUrl(input) {
   return url
 }
 
-// Pull a much wider, deeper set of real signals out of raw HTML — no full browser render needed
 function extractSignals(html, url, loadTimeMs) {
   const lower = html.toLowerCase()
 
@@ -21,16 +20,11 @@ function extractSignals(html, url, loadTimeMs) {
     (html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) || [])[1] || ''
 
   return {
-    // Trust & security
     hasSSL: url.startsWith('https://'),
-
-    // Mobile & technical
     hasViewportMeta: /<meta[^>]+name=["']viewport["']/i.test(html),
     pageWeightKB: Math.round(html.length / 1024),
     loadTimeMs,
     externalScriptCount: scriptTags.length,
-
-    // SEO
     titleTag,
     titleLength: titleTag.length,
     metaDescription,
@@ -38,12 +32,8 @@ function extractSignals(html, url, loadTimeMs) {
     h1Count: h1Tags.length,
     hasOpenGraph: /<meta[^>]+property=["']og:/i.test(html),
     hasFavicon: /<link[^>]+rel=["'][^"']*icon[^"']*["']/i.test(html),
-
-    // Accessibility
     totalImages: imgTags.length,
     imagesWithoutAlt,
-
-    // Conversion / contact
     hasContactForm: /<form/i.test(html),
     mentionsWhatsapp: lower.includes('wa.me') || lower.includes('whatsapp'),
     hasChatWidgetHint:
@@ -55,11 +45,8 @@ function extractSignals(html, url, loadTimeMs) {
     hasPhoneNumber: /(\+?\d[\d\s\-\(\)]{8,}\d)/.test(html),
     hasSocialLinks:
       lower.includes('instagram.com') || lower.includes('facebook.com') || lower.includes('linkedin.com'),
-
-    // Analytics / trust
     hasAnalytics:
       lower.includes('google-analytics') || lower.includes('gtag(') || lower.includes('googletagmanager'),
-
     htmlLength: html.length,
   }
 }
@@ -127,7 +114,7 @@ Rules: never invent data not given above. Be specific and technical, not generic
         Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.6,
         max_tokens: 500,
@@ -221,7 +208,6 @@ async function runAudit(req, res) {
   }
 }
 
-// Admin: view all audit leads
 async function getAuditLeads(req, res) {
   try {
     const leads = await AuditLead.find().sort({ createdAt: -1 })
