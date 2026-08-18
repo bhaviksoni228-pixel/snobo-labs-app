@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
@@ -15,14 +15,22 @@ export default function AuditPage() {
   const [report, setReport] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
+  const urlInputRef = useRef<HTMLInputElement>(null)
+  const emailInputRef = useRef<HTMLInputElement>(null)
+
   function handleUrlSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!url.trim()) return
+    const value = urlInputRef.current?.value || ''
+    if (!value.trim()) return
+    setUrl(value)
     setStep('email')
   }
 
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const value = emailInputRef.current?.value || ''
+    if (!value.trim()) return
+    setEmail(value)
     setStep('loading')
     setErrorMsg('')
 
@@ -30,7 +38,7 @@ export default function AuditPage() {
       const res = await fetch(`${API_URL}/api/audit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, email }),
+        body: JSON.stringify({ url, email: value }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || 'Something went wrong')
@@ -65,9 +73,9 @@ export default function AuditPage() {
             className="max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
           >
             <input
+              ref={urlInputRef}
+              defaultValue=""
               placeholder="yourwebsite.com"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
               className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
             />
             <button
@@ -88,12 +96,10 @@ export default function AuditPage() {
               Checking: <span className="text-black font-semibold">{url}</span>
             </div>
             <input
+              ref={emailInputRef}
               type="email"
-              required
-              autoComplete="email"
+              defaultValue=""
               placeholder="Where should we send your report?"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
             />
             <button
