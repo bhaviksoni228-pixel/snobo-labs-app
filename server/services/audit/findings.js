@@ -247,3 +247,272 @@ function buildFindings(signals, technical, pageSpeed = null) {
       length < 30 ||
       length > 65
     ) {
+      medium.push({
+        category: 'SEO',
+        severity: 'medium',
+        title:
+          'Title length could be improved',
+        detail:
+          "The title falls outside Snobo Labs' practical 30–65 character range.",
+        evidence:
+          `${length} characters`,
+      })
+    } else {
+      positive.push({
+        category: 'SEO',
+        title:
+          'Title tag is present',
+        detail:
+          'The page has a title with a reasonable length.',
+        evidence:
+          `${length} characters`,
+      })
+    }
+  }
+
+  // -----------------------------
+  // SEO — DESCRIPTION
+  // -----------------------------
+
+  if (!signals.hasMetaDescription) {
+    medium.push({
+      category: 'SEO',
+      severity: 'medium',
+      title:
+        'Meta description was not detected',
+      detail:
+        'A meta description was not found in the server-delivered HTML.',
+      evidence:
+        'Server HTML check. Dynamically generated metadata may not appear here.',
+    })
+  } else {
+    positive.push({
+      category: 'SEO',
+      title:
+        'Meta description is present',
+      detail:
+        'A meta description was detected.',
+      evidence:
+        `${signals.metaDescriptionLength} characters`,
+    })
+  }
+
+  // -----------------------------
+  // SEO — CANONICAL
+  // -----------------------------
+
+  if (!signals.hasCanonical) {
+    medium.push({
+      category: 'SEO',
+      severity: 'medium',
+      title:
+        'Canonical URL was not detected',
+      detail:
+        'A canonical link was not found in the server-delivered HTML.',
+      evidence:
+        'Server HTML check.',
+    })
+  } else {
+    positive.push({
+      category: 'SEO',
+      title:
+        'Canonical URL is present',
+      detail:
+        'The page specifies a canonical URL.',
+    })
+  }
+
+  // -----------------------------
+  // SEO — STRUCTURED DATA
+  // -----------------------------
+
+  if (signals.structuredDataCount === 0) {
+    medium.push({
+      category: 'SEO',
+      severity: 'medium',
+      title:
+        'Structured data was not detected',
+      detail:
+        'No JSON-LD structured data block was found in the server HTML.',
+      evidence:
+        'This does not prove that the website has no structured data elsewhere.',
+    })
+  } else {
+    positive.push({
+      category: 'SEO',
+      title:
+        'Structured data detected',
+      detail:
+        `${signals.structuredDataCount} JSON-LD block(s) were detected.`,
+    })
+  }
+
+  // -----------------------------
+  // ACCESSIBILITY — IMAGES
+  // -----------------------------
+
+  if (
+    signals.totalImages > 0 &&
+    signals.imagesWithoutAlt > 0
+  ) {
+    medium.push({
+      category: 'Accessibility',
+      severity: 'medium',
+      title:
+        'Some images lack alt attributes',
+      detail:
+        'Images without alternative text can be inaccessible to screen-reader users.',
+      evidence:
+        `${signals.imagesWithoutAlt} of ${signals.totalImages} images`,
+    })
+  } else if (signals.totalImages > 0) {
+    positive.push({
+      category: 'Accessibility',
+      title:
+        'Images have alt attributes',
+      detail:
+        'No images missing an alt attribute were detected in the server HTML.',
+    })
+  }
+
+  // -----------------------------
+  // MOBILE
+  // -----------------------------
+
+  if (!signals.hasViewport) {
+    medium.push({
+      category: 'Mobile',
+      severity: 'medium',
+      title:
+        'Viewport metadata was not detected',
+      detail:
+        'The standard viewport declaration was not found in server HTML.',
+      evidence:
+        'Server HTML check.',
+    })
+  } else {
+    positive.push({
+      category: 'Mobile',
+      title:
+        'Viewport metadata is present',
+      detail:
+        'A standard mobile viewport declaration was detected.',
+    })
+  }
+
+  // -----------------------------
+  // SOCIAL
+  // -----------------------------
+
+  if (!signals.hasOpenGraph) {
+    medium.push({
+      category: 'Social',
+      severity: 'medium',
+      title:
+        'Open Graph metadata was not detected',
+      detail:
+        'Social platforms may have less control over the preview generated when this page is shared.',
+      evidence:
+        'Server HTML check.',
+    })
+  } else {
+    positive.push({
+      category: 'Social',
+      title:
+        'Open Graph metadata detected',
+      detail:
+        'Open Graph metadata was found in the server HTML.',
+    })
+  }
+
+  // -----------------------------
+  // TECHNICAL SEO
+  // -----------------------------
+
+  if (!technical?.robotsTxt?.reachable) {
+    medium.push({
+      category: 'Technical SEO',
+      severity: 'medium',
+      title:
+        'robots.txt was not confirmed',
+      detail:
+        'A reachable robots.txt file was not detected.',
+    })
+  } else {
+    positive.push({
+      category: 'Technical SEO',
+      title:
+        'robots.txt is reachable',
+      detail:
+        'The website exposes a reachable robots.txt file.',
+    })
+  }
+
+  if (!technical?.sitemap?.reachable) {
+    medium.push({
+      category: 'Technical SEO',
+      severity: 'medium',
+      title:
+        'XML sitemap was not confirmed',
+      detail:
+        'A reachable XML sitemap was not detected.',
+    })
+  } else {
+    positive.push({
+      category: 'Technical SEO',
+      title:
+        'XML sitemap is reachable',
+      detail:
+        'A sitemap was successfully reached.',
+      evidence:
+        technical.sitemap.url,
+    })
+  }
+
+  // -----------------------------
+  // CONVERSION
+  // -----------------------------
+
+  const hasContactPath =
+    signals.formCount > 0 ||
+    signals.hasEmail ||
+    signals.hasPhoneNumber ||
+    signals.hasWhatsApp ||
+    signals.hasChatWidget
+
+  if (!hasContactPath) {
+    medium.push({
+      category: 'Conversion',
+      severity: 'medium',
+      title:
+        'No obvious contact path was detected',
+      detail:
+        'The server-delivered HTML did not expose a form, email, phone number, WhatsApp link, or common chat widget.',
+      evidence:
+        'This is a detection result, not proof that the rendered website lacks a contact option.',
+    })
+  } else {
+    positive.push({
+      category: 'Conversion',
+      title:
+        'A customer contact path was detected',
+      detail:
+        'At least one contact or communication mechanism was detected.',
+    })
+  }
+
+  // -----------------------------
+  // RETURN
+  // -----------------------------
+
+  return {
+    critical: critical.slice(0, 5),
+    high: high.slice(0, 8),
+    medium: medium.slice(0, 12),
+    positive: positive.slice(0, 12),
+  }
+}
+
+module.exports = {
+  buildFindings,
+}
