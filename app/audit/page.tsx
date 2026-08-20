@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
@@ -15,33 +15,41 @@ export default function AuditPage() {
   const [report, setReport] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
-  const urlInputRef = useRef<HTMLInputElement>(null)
-  const emailInputRef = useRef<HTMLInputElement>(null)
-
-  // Force a repaint whenever the step changes — works around a rendering glitch
-  // on some Android browsers where React updates the DOM but doesn't visually repaint.
   useEffect(() => {
     document.body.style.transform = 'translateZ(0)'
+
     const frame = requestAnimationFrame(() => {
       document.body.style.transform = ''
     })
+
     window.scrollTo(window.scrollX, window.scrollY + 1)
     window.scrollTo(window.scrollX, window.scrollY - 1)
+
     return () => cancelAnimationFrame(frame)
   }, [step])
 
-  function handleUrlSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const value = urlInputRef.current?.value || ''
-    if (!value.trim()) return
+  function handleUrlSubmit() {
+    const value = url.trim()
+
+    if (!value) return
+
+    setErrorMsg('')
     setUrl(value)
     setStep('email')
   }
 
-  async function handleEmailSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const value = emailInputRef.current?.value || ''
-    if (!value.trim()) return
+  function handleUrlKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleUrlSubmit()
+    }
+  }
+
+  async function handleEmailSubmit() {
+    const value = email.trim()
+
+    if (!value) return
+
     setEmail(value)
     setStep('loading')
     setErrorMsg('')
@@ -49,16 +57,38 @@ export default function AuditPage() {
     try {
       const res = await fetch(`${API_URL}/api/audit`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, email: value }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url,
+          email: value,
+        }),
       })
+
       const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Something went wrong')
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Something went wrong')
+      }
+
       setReport(data.report)
       setStep('result')
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Something went wrong. Please try again.')
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : 'Something went wrong. Please try again.'
+
+      setErrorMsg(message)
       setStep('error')
+    }
+  }
+
+  function handleEmailKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleEmailSubmit()
     }
   }
 
@@ -71,69 +101,102 @@ export default function AuditPage() {
           <div className="font-display text-[11px] tracking-[0.28em] uppercase text-grey-4 mb-4">
             Free Tool
           </div>
+
           <h1 className="font-display font-bold text-[clamp(1.8rem,6vw,3.2rem)] leading-tight mb-4 text-white">
             Find out what your website is costing you.
           </h1>
+
           <p className="text-grey-5">
-            Paste your website URL. Snobo checks it and tells you exactly where you&apos;re likely losing customers — free, in under a minute.
+            Paste your website URL. Snobo checks it and tells you exactly where
+            you&apos;re likely losing customers — free, in under a minute.
           </p>
         </div>
 
         {step === 'input' && (
-          <form
-            onSubmit={handleUrlSubmit}
+          <div
+            role="form"
+            aria-label="Website audit"
             className="max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
           >
             <input
-              ref={urlInputRef}
-              defaultValue=""
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={handleUrlKeyDown}
+              type="url"
+              inputMode="url"
+              autoComplete="url"
               placeholder="yourwebsite.com"
+              aria-label="Website URL"
               className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
             />
+
             <button
-              type="submit"
-              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap"
+              type="button"
+              onClick={handleUrlSubmit}
+              disabled={!url.trim()}
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Audit it →
             </button>
-          </form>
+          </div>
         )}
 
         {step === 'email' && (
-          <form
-            onSubmit={handleEmailSubmit}
+          <div
+            role="form"
+            aria-label="Audit email"
             className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
           >
             <div className="text-sm text-gray-500">
-              Checking: <span className="text-black font-semibold">{url}</span>
+              Checking:{' '}
+              <span className="text-black font-semibold break-all">
+                {url}
+              </span>
             </div>
+
             <input
-              ref={emailInputRef}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleEmailKeyDown}
               type="email"
-              defaultValue=""
+              inputMode="email"
+              autoComplete="email"
               placeholder="Where should we send your report?"
+              aria-label="Email address"
               className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
             />
+
             <button
-              type="submit"
-              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white"
+              type="button"
+              onClick={handleEmailSubmit}
+              disabled={!email.trim()}
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Get my free audit →
             </button>
-          </form>
+          </div>
         )}
 
         {step === 'loading' && (
           <div className="max-w-md py-10 px-6 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-            <div className="text-black animate-pulse font-medium">Analyzing your site...</div>
+            <div className="text-black animate-pulse font-medium">
+              Analyzing your site...
+            </div>
           </div>
         )}
 
         {step === 'error' && (
           <div className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-            <p className="text-red-600 text-sm font-medium">{errorMsg}</p>
+            <p className="text-red-600 text-sm font-medium">
+              {errorMsg}
+            </p>
+
             <button
-              onClick={() => setStep('input')}
+              type="button"
+              onClick={() => {
+                setErrorMsg('')
+                setStep('input')
+              }}
               className="font-display text-sm underline text-black"
             >
               Try again
@@ -146,6 +209,7 @@ export default function AuditPage() {
             <div className="rounded-2xl p-6 sm:p-8 whitespace-pre-line text-black leading-relaxed bg-white shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
               {report}
             </div>
+
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href="/services/chat"
@@ -153,6 +217,7 @@ export default function AuditPage() {
               >
                 Fix this with Snobo Chat →
               </a>
+
               <a
                 href="/services/sites"
                 className="font-display font-semibold text-sm px-6 py-3.5 rounded-full border border-white text-white"
