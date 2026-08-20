@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
@@ -11,49 +11,34 @@ type Step = 'input' | 'email' | 'loading' | 'result' | 'error'
 export default function AuditPage() {
   const [step, setStep] = useState<Step>('input')
   const [url, setUrl] = useState('')
-  const [email, setEmail] = useState('')
   const [report, setReport] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
-  useEffect(() => {
-    document.body.style.transform = 'translateZ(0)'
-
-    const frame = requestAnimationFrame(() => {
-      document.body.style.transform = ''
-    })
-
-    window.scrollTo(window.scrollX, window.scrollY + 1)
-    window.scrollTo(window.scrollX, window.scrollY - 1)
-
-    return () => cancelAnimationFrame(frame)
-  }, [step])
+  const urlInputRef = useRef<HTMLInputElement>(null)
+  const emailInputRef = useRef<HTMLInputElement>(null)
 
   function handleUrlSubmit() {
-    const value = url.trim()
+    const value = urlInputRef.current?.value?.trim() || ''
 
     if (!value) return
 
-    setErrorMsg('')
     setUrl(value)
+    setErrorMsg('')
     setStep('email')
   }
 
-  function handleUrlKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      handleUrlSubmit()
-    }
-  }
+  function handleEmailSubmit() {
+    const email = emailInputRef.current?.value?.trim() || ''
 
-  async function handleEmailSubmit() {
-    const value = email.trim()
+    if (!email) return
 
-    if (!value) return
-
-    setEmail(value)
     setStep('loading')
     setErrorMsg('')
 
+    submitAudit(email)
+  }
+
+  async function submitAudit(email: string) {
     try {
       const res = await fetch(`${API_URL}/api/audit`, {
         method: 'POST',
@@ -62,7 +47,7 @@ export default function AuditPage() {
         },
         body: JSON.stringify({
           url,
-          email: value,
+          email,
         }),
       })
 
@@ -72,7 +57,7 @@ export default function AuditPage() {
         throw new Error(data.message || 'Something went wrong')
       }
 
-      setReport(data.report)
+      setReport(data.report || '')
       setStep('result')
     } catch (err: unknown) {
       const message =
@@ -82,6 +67,13 @@ export default function AuditPage() {
 
       setErrorMsg(message)
       setStep('error')
+    }
+  }
+
+  function handleUrlKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleUrlSubmit()
     }
   }
 
@@ -113,28 +105,22 @@ export default function AuditPage() {
         </div>
 
         {step === 'input' && (
-          <div
-            role="form"
-            aria-label="Website audit"
-            className="max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
-          >
+          <div className="max-w-md flex flex-col sm:flex-row gap-3 bg-white rounded-2xl p-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
             <input
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              onKeyDown={handleUrlKeyDown}
-              type="url"
+              ref={urlInputRef}
+              type="text"
               inputMode="url"
               autoComplete="url"
               placeholder="yourwebsite.com"
               aria-label="Website URL"
-              className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
+              className="flex-1 min-w-0 bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black focus:outline-none"
+              onKeyDown={handleUrlKeyDown}
             />
 
             <button
               type="button"
               onClick={handleUrlSubmit}
-              disabled={!url.trim()}
-              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white whitespace-nowrap"
             >
               Audit it →
             </button>
@@ -142,11 +128,7 @@ export default function AuditPage() {
         )}
 
         {step === 'email' && (
-          <div
-            role="form"
-            aria-label="Audit email"
-            className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
-          >
+          <div className="max-w-md space-y-4 bg-white rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
             <div className="text-sm text-gray-500">
               Checking:{' '}
               <span className="text-black font-semibold break-all">
@@ -155,22 +137,20 @@ export default function AuditPage() {
             </div>
 
             <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={handleEmailKeyDown}
+              ref={emailInputRef}
               type="email"
               inputMode="email"
               autoComplete="email"
               placeholder="Where should we send your report?"
               aria-label="Email address"
-              className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black outline-none"
+              className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3.5 text-black placeholder:text-gray-400 focus:border-black focus:outline-none"
+              onKeyDown={handleEmailKeyDown}
             />
 
             <button
               type="button"
               onClick={handleEmailSubmit}
-              disabled={!email.trim()}
-              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              className="font-display font-semibold px-6 py-3.5 rounded-full bg-black text-white"
             >
               Get my free audit →
             </button>
