@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { getSiteContent } from '@/lib/api'
 
 const DEFAULTS = {
-  email: 'snobolabs@gmail.com',
+  email: 'snobolabs.in@gmail.com',
   copyright: `© ${new Date().getFullYear()} Snobo Labs. All rights reserved.`,
 }
 
