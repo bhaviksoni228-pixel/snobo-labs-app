@@ -6,7 +6,7 @@ const User = require('./models/User')
 async function seed() {
   await mongoose.connect(process.env.MONGODB_URI)
 
-  const email = 'snobolabs@gmail.com'
+  const email = 'snobolabs.in@gmail.com'
   const existing = await User.findOne({ email })
   if (existing) {
     console.log('Admin already exists:', email)
