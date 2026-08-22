@@ -18,39 +18,135 @@ const rajdhani = Rajdhani({
 
 export const metadata: Metadata = {
   title: 'Snobo Labs — Intelligence Beyond Limits',
+
   description:
     'Websites, AI agents, and WhatsApp CRMs — built fast, built by the person who actually codes it. Live in 7 days.',
+
   metadataBase: new URL('https://snobolabs.in'),
+
+  /*
+   * FAVICON
+   *
+   * /icon.svg is the Snobo Labs mascot logo.
+   * This is used by browsers and can also be discovered
+   * by Google for the favicon shown beside search results.
+   */
+  icons: {
+    icon: [
+      {
+        url: '/icon.svg',
+        type: 'image/svg+xml',
+      },
+    ],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
+
+  /*
+   * OPEN GRAPH
+   *
+   * Used when Snobo Labs pages are shared on
+   * WhatsApp, Facebook, LinkedIn, etc.
+   */
   openGraph: {
     title: 'Snobo Labs — Intelligence Beyond Limits',
-    description: 'AI agents, websites, and CRMs. Built fast, built direct.',
+
+    description:
+      'AI agents, websites, and CRMs. Built fast, built direct.',
+
     url: 'https://snobolabs.in',
+
     siteName: 'Snobo Labs',
+
     type: 'website',
+
+    images: [
+      {
+        url: 'https://snobolabs.in/icon.svg',
+        width: 1536,
+        height: 1536,
+        alt: 'Snobo Labs logo',
+      },
+    ],
+  },
+
+  /*
+   * TWITTER / X
+   */
+  twitter: {
+    card: 'summary',
+
+    title: 'Snobo Labs — Intelligence Beyond Limits',
+
+    description:
+      'AI agents, websites, and CRMs. Built fast, built direct.',
+
+    images: ['https://snobolabs.in/icon.svg'],
   },
 }
 
+/*
+ * GOOGLE ANALYTICS
+ *
+ * Keep your existing environment variable.
+ * If NEXT_PUBLIC_GA_ID is not configured,
+ * Analytics simply won't load.
+ */
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
+/*
+ * ORGANIZATION STRUCTURED DATA
+ *
+ * Helps search engines understand that
+ * Snobo Labs is an organization and identifies
+ * its official logo.
+ */
 const ORG_JSON_LD = {
   '@context': 'https://schema.org',
+
   '@graph': [
     {
       '@type': 'Organization',
+
       '@id': 'https://snobolabs.in/#organization',
+
       name: 'Snobo Labs',
+
       url: 'https://snobolabs.in',
-      logo: 'https://snobolabs.in/symbol.png',
-      founder: { '@id': 'https://snobolabs.in/about#bhaviksoni' },
+
+      logo: {
+        '@type': 'ImageObject',
+
+        url: 'https://snobolabs.in/icon.svg',
+
+        width: 1536,
+
+        height: 1536,
+      },
+
+      image: 'https://snobolabs.in/icon.svg',
+
+      founder: {
+        '@id': 'https://snobolabs.in/about#bhaviksoni',
+      },
+
       description:
         'Snobo Labs builds AI agents, websites, and WhatsApp-native CRMs for small businesses — fast, direct, and without account managers.',
     },
+
     {
       '@type': 'Person',
+
       '@id': 'https://snobolabs.in/about#bhaviksoni',
+
       name: 'Bhavik Soni',
+
       jobTitle: 'Founder & CEO',
-      worksFor: { '@id': 'https://snobolabs.in/#organization' },
+
+      worksFor: {
+        '@id': 'https://snobolabs.in/#organization',
+      },
+
       url: 'https://snobolabs.in/about',
     },
   ],
@@ -58,31 +154,57 @@ const ORG_JSON_LD = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${rajdhani.variable}`}>
+    <html
+      lang="en"
+      className={`${spaceGrotesk.variable} ${rajdhani.variable}`}
+    >
       <body className="font-body">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
+
+        {/* Organization structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(ORG_JSON_LD),
+          }}
+        />
+
+        {/* Main website */}
         {children}
+
+        {/* Snobo Chat */}
         <ChatWidget />
+
+        {/* Google Analytics */}
         {GA_ID && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
               strategy="afterInteractive"
             />
-            <Script id="ga-init" strategy="afterInteractive">
+
+            <Script
+              id="ga-init"
+              strategy="afterInteractive"
+            >
               {`
                 window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
+
+                function gtag(){
+                  dataLayer.push(arguments);
+                }
+
                 gtag('js', new Date());
+
                 gtag('config', '${GA_ID}');
               `}
             </Script>
           </>
         )}
+
       </body>
     </html>
   )
