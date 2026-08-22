@@ -34,7 +34,7 @@ router.get('/seed-once/:secretKey', async (req, res) => {
     )
     await SiteContent.findOneAndUpdate(
       { key: 'footer' },
-      { key: 'footer', data: { email: 'snobolabs@gmail.com', copyright: `© ${new Date().getFullYear()} Snobo Labs. All rights reserved.` } },
+      { key: 'footer', data: { email: 'snobolabs.in@gmail.com', copyright: `© ${new Date().getFullYear()} Snobo Labs. All rights reserved.` } },
       { upsert: true }
     )
 
