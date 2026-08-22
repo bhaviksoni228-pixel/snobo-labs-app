@@ -112,7 +112,7 @@ export default function Nav() {
               Hire Us
             </a>
             <a
-              href="mailto:snobolabs@gmail.com?subject=Book a call with Snobo Labs"
+              href="mailto:snobolabs.in@gmail.com?subject=Book a call with Snobo Labs"
               onClick={() => setOpen(false)}
               className="text-center font-display font-semibold text-sm border border-white text-white px-6 py-4 rounded-full"
             >
