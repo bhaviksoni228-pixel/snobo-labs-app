@@ -25,11 +25,19 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://snobolabs.in'),
 
   /*
+   * CANONICAL URL
+   *
+   * Tells Google that the HTTPS homepage is
+   * the preferred/original version of the page.
+   */
+  alternates: {
+    canonical: 'https://snobolabs.in/',
+  },
+
+  /*
    * FAVICON
    *
-   * /icon.svg is the Snobo Labs mascot logo.
-   * This is used by browsers and can also be discovered
-   * by Google for the favicon shown beside search results.
+   * Snobo Labs mascot logo.
    */
   icons: {
     icon: [
@@ -88,7 +96,6 @@ export const metadata: Metadata = {
 /*
  * GOOGLE ANALYTICS
  *
- * Keep your existing environment variable.
  * If NEXT_PUBLIC_GA_ID is not configured,
  * Analytics simply won't load.
  */
