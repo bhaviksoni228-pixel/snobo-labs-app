@@ -47,7 +47,7 @@ async function createInquiry(req, res) {
       resend.emails
         .send({
           from: 'Snobo Labs <onboarding@resend.dev>',
-          to: process.env.NOTIFY_EMAIL || 'snobolabs@gmail.com',
+          to: process.env.NOTIFY_EMAIL || 'snobolabs.in@gmail.com',
           subject: `New Hire Request — ${serviceName} from ${name}`,
           html: `
             <h2>New inquiry: ${serviceName}</h2>
