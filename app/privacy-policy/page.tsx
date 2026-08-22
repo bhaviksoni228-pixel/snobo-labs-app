@@ -83,8 +83,8 @@ export default function PrivacyPolicy() {
             <p>
               You can request access to, correction of, or deletion of your personal data at any
               time by contacting us directly at{' '}
-              <a href="mailto:snobolabs@gmail.com" className="text-white underline">
-                snobolabs@gmail.com
+              <a href="mailto:snobolabs.in@gmail.com" className="text-white underline">
+                snobolabs.in@gmail.com
               </a>
               .
             </p>
@@ -102,8 +102,8 @@ export default function PrivacyPolicy() {
             <h2 className="font-display font-semibold text-white text-lg mb-2">9. Contact</h2>
             <p>
               Questions about this policy? Reach out at{' '}
-              <a href="mailto:snobolabs@gmail.com" className="text-white underline">
-                snobolabs@gmail.com
+              <a href="mailto:snobolabs.in@gmail.com" className="text-white underline">
+                snobolabs.in@gmail.com
               </a>
               .
             </p>
