@@ -28,7 +28,7 @@ Create your admin login (run once):
 ```
 node seedAdmin.js
 ```
-This creates an admin account: `snobolabs@gmail.com` / `ChangeThisPassword123` — log in once, then change this password (there's no "change password" UI yet — for now, edit it directly in MongoDB Atlas or re-run seedAdmin.js with a new password after deleting the old user).
+This creates an admin account: `snobolabs.in@gmail.con` / `ChangeThisPassword123` — log in once, then change this password (there's no "change password" UI yet — for now, edit it directly in MongoDB Atlas or re-run seedAdmin.js with a new password after deleting the old user).
 
 Start the backend:
 ```
