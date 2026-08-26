@@ -37,17 +37,18 @@ export const metadata: Metadata = {
   /*
    * FAVICON
    *
-   * Snobo Labs mascot logo.
+   * Uses the dynamic site-icon route.
+   * This allows the logo to eventually be
+   * changed from the admin panel.
    */
   icons: {
     icon: [
       {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
+        url: '/api/site-icon',
       },
     ],
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    shortcut: '/api/site-icon',
+    apple: '/api/site-icon',
   },
 
   /*
